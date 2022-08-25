@@ -6,6 +6,7 @@ class TextFlow {
         this.textNew = "";
     }
     setText(newText, speed = 10) {
+        if(!newText) this.el.textContent = '';
         const promise = new Promise((resolve) => (this.resolve = resolve));
         this.queue = [];
         for (let nextChar of newText)
@@ -22,7 +23,7 @@ class TextFlow {
         if(this.frame >= this.queue.length) {
             this.resolve();
         } else {
-            this.el.innerHTML = this.output;
+            this.el.textContent = this.output;
             let timeoutTime = this.speed + Math.floor(Math.random() * (this.speed*2))
             setTimeout(() => {  this.frameRequest = requestAnimationFrame(this.update); }, timeoutTime);
             this.frame++;

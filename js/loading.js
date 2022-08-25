@@ -22,6 +22,8 @@ function GameStart () {
         setTimeout(() =>  {
             audio.Map.play();
             Game.state = "normal"
+            const dialogue_intro = new Dialogue({ lines: ["I am a mouse!", "hehe", "Rina SUCCKKKSSS", "JK i love her"] });
+            dialogue_intro.start();
         }, 900);
     }, 900);
 }

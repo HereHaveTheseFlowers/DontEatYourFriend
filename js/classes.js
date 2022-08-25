@@ -234,6 +234,7 @@ class Level {
             if(obj.level === level) obj.draw();
         /// INTERACT W/ OBJECTS
         for(let obj of interactableObjs) {
+            if(Game.state !== "normal") return;
             if(obj.level === level && IsInView(obj) && CollisionDetectionRange(player, obj, GLOB_interactionRange)) {
                 c.globalAlpha = 0.8;
                 iconInteract.position = {
@@ -246,6 +247,7 @@ class Level {
             }
         }
         if(!inventoryObj) {
+            if(Game.state !== "normal") return;
             for(let obj of itemsObjs)
                 if(obj.level === level && IsInView(obj) && obj.location === "floor" && CollisionDetection(player, obj)) {
                     c.globalAlpha = 0.8;

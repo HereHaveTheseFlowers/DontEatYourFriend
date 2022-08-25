@@ -13,12 +13,15 @@ const GLOB_bgOffset = { x:  - Tiles(1), y: - Tiles(4) };
 
 const Game = {
     state: "transition",
-    debug: false
+    debug: false,
+    speed: 1,
+    movement_slower: 2,
+    active_dialogue: false
 };
 
 //////// NON - CONSTANTS ////////
 
-let GLOB_movingSpeed = 3;
+let GLOB_movingSpeed = 6;
 
 let floorObjs = [];
 let bgObjs = [];
@@ -33,26 +36,3 @@ let itemsObjs = [];
 
 let pickupTimer = 0;
 const pickupTimerCap = 30;
-
-const keys = {
-    w: {
-        pressed: false
-    },
-    a: {
-        pressed: false
-    },
-    s: {
-        pressed: false
-    },
-    d: {
-        pressed: false
-    },
-    e: {
-        pressed: false
-    },
-    p: {
-        pressed: false
-    }
-}
-
-

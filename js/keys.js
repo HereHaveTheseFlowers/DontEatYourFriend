@@ -1,3 +1,27 @@
+const keys = {
+    w: {
+        pressed: false
+    },
+    a: {
+        pressed: false
+    },
+    s: {
+        pressed: false
+    },
+    d: {
+        pressed: false
+    },
+    e: {
+        pressed: false
+    },
+    p: {
+        pressed: false
+    },
+    enter: {
+        pressed: false
+    }
+}
+
 window.addEventListener('keydown', (e) => {
     switch (e.key) {
         case 'w':
@@ -65,6 +89,9 @@ window.addEventListener('keydown', (e) => {
             break;
         case 'з':
             keys.p.pressed = true;
+            break;
+        case 'Enter':
+            keys.enter.pressed = true;
             break;
   }
 })
@@ -137,5 +164,8 @@ window.addEventListener('keyup', (e) => {
         case 'з':
             keys.p.pressed = false
             break
+        case 'Enter':
+            keys.enter.pressed = false;
+            break;
   }
 })
