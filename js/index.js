@@ -1,10 +1,25 @@
+import TextFlow from './components/textgen.js';
+import { audio } from './components/audio.js';
+import { Game, Tiles, Lists, Timers } from './components/globals.js';
+Game.tileSize = 16 * (Game.exportRatio / 100)
+Game.bgOffset = { x:  - Tiles(1), y: - Tiles(4) }
+Game.mainCanvas.style.display = 'none';
+Game.mainCanvas.width = 1056;
+Game.mainCanvas.height = 672; 
+Game.c = Game.mainCanvas.getContext('2d');
+Game.chat = new TextFlow(document.querySelector('.text'));
+import { prepareGameStart, GameStart } from './components/loading.js';
+import { keys, prepareKeys } from './components/keys.js';
+import Sprite from './components/sprite.js';
+import { Level, levels, level_Day1, level_Home } from './components/level.js';
+import Dialogue from './components/dialogue.js';
+import { MakeShadow, CreateImage, CollisionDetection, CollisionDetectionRange, HandlePlayerMovement, PickRand, PopulateAreaWith, IsInView, CreateBorders } from './components/functions.js';
+import { performanceChecker, animate } from './components/animate.js';
 
-mainCanvas.style.display = 'none';
-const el = document.querySelector('.text');
-const chat = new TextFlow(el);
-mainCanvas.width = 1056;
-mainCanvas.height = 672; 
-const c = mainCanvas.getContext('2d');
+prepareKeys();
+prepareGameStart();
+
+
 
 /// IMAGE UPLOAD
 
@@ -51,12 +66,13 @@ const player = new Sprite({
   level: "home",
   animationFrameRate: 7,
 });
-let inventoryObj = false;
+Game.player = player
+
 
 player.pickup = function(obj) {
   if(!obj.item)
     return false;
-  if(inventoryObj) {
+  if(Game.inventoryObj) {
     obj.position = {
       x: player.position.x,
       y: player.position.y
@@ -64,19 +80,19 @@ player.pickup = function(obj) {
     obj.size = 1;
     obj.moveLocation("floor");
     obj.level = player.level
-    chat.setText("You placed a " + obj.name + ' on the ground.')
-    inventoryObj = false;
+    Game.chat.setText("You placed a " + obj.name + ' on the ground.')
+    Game.inventoryObj = false;
   }
   else {
-    inventoryObj = obj;
+    Game.inventoryObj = obj;
     obj.size = 1.5;
     obj.moveLocation("inventory");
-    chat.setText("You picked up a " + obj.name + '.')
+    Game.chat.setText("You picked up a " + obj.name + '.')
   }
 }
 
 player.interact = function(obj) {
-  if(!obj || !CollisionDetectionRange(player, obj, GLOB_interactionRange))
+  if(!obj || !CollisionDetectionRange(player, obj, Game.interactionRange))
     return false;
   obj.interact(player)
 }
@@ -102,7 +118,8 @@ const iconPickup= new Sprite({
   animationFrameRate: 50,
   image: imageIconPickup
 });
-
+Game.iconInteract = iconInteract;
+Game.iconPickup = iconPickup;
 
 ////////////////////////
 //// BG AND DEBUG   ////
@@ -110,8 +127,8 @@ const iconPickup= new Sprite({
 const background = new Sprite({
   name: "background",
   position: {
-      x: GLOB_bgOffset.x,
-      y: GLOB_bgOffset.y
+      x: Game.bgOffset.x,
+      y: Game.bgOffset.y
   },
   image: "bg",
   location: "bg",
@@ -120,7 +137,7 @@ const background = new Sprite({
 
 background.postLoad = function() {
   if(this.name === "background") {
-    for(let i = 0; i < background.width / GLOB_tileSize; i++) {
+    for(let i = 0; i < background.width / Game.tileSize; i++) {
       const imageBorderCycles = CreateImage('border');
       const imageBorderCycles2 = CreateImage('border');
       const imageBorderCycles3 = CreateImage('border');
@@ -128,8 +145,8 @@ background.postLoad = function() {
       new Sprite({
           name: "border",
           position: {
-              x: GLOB_bgOffset.x + Tiles(i),
-              y: GLOB_bgOffset.y
+              x: Game.bgOffset.x + Tiles(i),
+              y: Game.bgOffset.y
           },
           image: imageBorderCycles,
           location: "debug",
@@ -139,8 +156,8 @@ background.postLoad = function() {
       new Sprite({
           name: "border",
           position: {
-              x: GLOB_bgOffset.x + Tiles(i),
-              y: GLOB_bgOffset.y + background.height - 40
+              x: Game.bgOffset.x + Tiles(i),
+              y: Game.bgOffset.y + background.height - 40
           },
           image: imageBorderCycles2,
           location: "debug",
@@ -150,8 +167,8 @@ background.postLoad = function() {
       new Sprite({
           name: "border",
           position: {
-              x: GLOB_bgOffset.x,
-              y: GLOB_bgOffset.y + Tiles(i)
+              x: Game.bgOffset.x,
+              y: Game.bgOffset.y + Tiles(i)
           },
           image: imageBorderCycles3,
           location: "debug",
@@ -161,8 +178,8 @@ background.postLoad = function() {
       new Sprite({
           name: "border",
           position: {
-              x: GLOB_bgOffset.x + background.width - Tiles(1),
-              y: GLOB_bgOffset.y + Tiles(i)
+              x: Game.bgOffset.x + background.width - Tiles(1),
+              y: Game.bgOffset.y + Tiles(i)
           },
           image: imageBorderCycles4,
           location: "debug",
@@ -176,8 +193,8 @@ background.postLoad = function() {
 const grid = new Sprite({
   name: "grid",
   position: {
-      x: GLOB_bgOffset.x,
-      y: GLOB_bgOffset.y
+      x: Game.bgOffset.x,
+      y: Game.bgOffset.y
   },
   image: imageGrid,
   location: "debug",
@@ -206,8 +223,8 @@ const border = new Sprite({
 const pool = new Sprite({
   name: "pool",
   position: {
-      x: GLOB_bgOffset.x + Tiles(14),
-      y: GLOB_bgOffset.y + Tiles(1)
+      x: Game.bgOffset.x + Tiles(14),
+      y: Game.bgOffset.y + Tiles(1)
   },
   image: imagePool,
   frames: { max: 2 },
@@ -219,17 +236,17 @@ const pool = new Sprite({
 });
 
 pool.interact = function(obj) {
-  if(!inventoryObj)
-    chat.setText('You can fill something with water.');
-  else if(inventoryObj.name === "leaf") {
-      chat.setText('You fill the leaf with a droplet of water.');
-      inventoryObj.image = inventoryObj.sprites.droplet;
-      inventoryObj.name = "leaf with a droplet of water";
+  if(!Game.inventoryObj)
+    Game.chat.setText('You can fill something with water.');
+  else if(Game.inventoryObj.name === "leaf") {
+      Game.chat.setText('You fill the leaf with a droplet of water.');
+      Game.inventoryObj.image = Game.inventoryObj.sprites.droplet;
+      Game.inventoryObj.name = "leaf with a droplet of water";
     }
-  else if(inventoryObj.name === "leaf with a droplet of water")
-    chat.setText('You already have a droplet on your leaf!');
+  else if(Game.inventoryObj.name === "leaf with a droplet of water")
+    Game.chat.setText('You already have a droplet on your leaf!');
   else
-    chat.setText('You cant fill that with water.');
+    Game.chat.setText('You cant fill that with water.');
 }
 
 
@@ -256,8 +273,8 @@ for(let b = 0; b < 10; b++) {
 const seed = new Sprite({
   name: "seed",
   position: {
-      x: GLOB_bgOffset.x + Tiles(12),
-      y: GLOB_bgOffset.y + Tiles(7)
+      x: Game.bgOffset.x + Tiles(12),
+      y: Game.bgOffset.y + Tiles(7)
   },
   image: "seed",
   solid: false,
@@ -266,4 +283,191 @@ const seed = new Sprite({
   level: "day1"
 });
 
-PopulateAreaWith(Tiles(1), Tiles(6), Tiles(18), Tiles(13), items = {leafs: 9, rocks: 6, mushrooms: 15}, level = "day1")
+PopulateAreaWith(Tiles(1), Tiles(6), Tiles(18), Tiles(13), {leafs: 9, rocks: 6, mushrooms: 15}, "day1")
+
+
+/// day 1 
+
+const treeHome = new Sprite({
+  name: "treeHome",
+  position: {
+      x: Game.bgOffset.x + Tiles(3),
+      y: Game.bgOffset.y + Tiles(0)
+  },
+  image: imageTreeHome,
+  location: "floor",
+  solid: false,
+  level: "day1"
+});
+
+// home borders
+treeHome.postLoad = function() {
+  const door = new Sprite({
+      name: "door",
+      position: {
+          x: this.position.x + Tiles(5),
+          y: this.position.y + Tiles(2)
+      },
+      image: 'door',
+      location: "floor",
+      solid: true,
+      interactable: true,
+      level: "day1"
+  });
+  door.interact = function() {
+      Game.state = "transition";
+      transition.style.opacity = 1;
+      setTimeout(() =>  {
+          transition.style.opacity = 0;
+          level_Home.switch();
+          player.position = {
+              x: Tiles(5),
+              y: Tiles(4) + 20
+          }
+          player.teleport(Tiles(-2), Tiles(4))
+          for(let obj of Lists.floorObjs)
+              if(obj.level === this.level) {
+                  obj.position.y -= Tiles(4);
+                  obj.position.x -= Tiles(-2);
+              }
+          for(let obj of Lists.upperObjs)
+              if(obj.level === this.level) {
+                  obj.position.y -= Tiles(4);
+                  obj.position.x -= Tiles(-2);
+              }
+          for(let obj of Lists.bgObjs)
+              if(obj.level === this.level) {
+                  obj.position.y -= Tiles(4);
+                  obj.position.x -= Tiles(-2);
+              }
+          for(let obj of Lists.debugObjs)
+              if(obj.level === this.level) {
+                  obj.position.y -= Tiles(4);
+                  obj.position.x -= Tiles(-2);
+              }
+          
+          Game.chat.setText("You went inside your home.");
+          setTimeout(() =>  {
+              Game.state = "normal"
+          }, 900);
+      }, 900);
+  }
+  CreateBorders([
+                [1, 0, 0, 0, 1],
+                [1, 0, 0, 0, 1],
+                [1, 1, 2, 1, 1]
+                ], door);
+}
+
+// home
+
+const background_home = new Sprite({
+  name: "background_home",
+  position: {
+      x: Game.bgOffset.x,
+      y: Game.bgOffset.y
+  },
+  image: "bg",
+  folder: "home",
+  location: "bg",
+  level: "home",
+  upperImage: "bgUpper",
+  upperImageOffset: 0
+});
+
+// tree home borders
+background_home.postLoad = function() {
+  CreateBorders([
+                [2, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 1, 0],
+                [0, 0, 0, 1, 0, 0, 0, 1, 0],
+                [0, 0, 0, 0, 1, 0, 1, 0, 0],
+                [0, 0, 0, 0, 1, 0, 1, 1, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [0, 0, 0, 0, 1, 0, 0, 1, 0],
+                [0, 0, 0, 0, 1, 1, 1, 1, 0]
+                ], this);
+}
+
+const door_home = new Sprite({
+  name: "door_home",
+  position: {
+      x: Game.bgOffset.x + Tiles(5) + 48,
+      y: Game.bgOffset.y + Tiles(11) - 48
+  },
+  image: "door",
+  location: "debug",
+  level: "home",
+  interactable: true
+});
+
+door_home.interact = function() {
+  Game.state = "transition";
+  transition.style.opacity = 1;
+  setTimeout(() =>  {
+      transition.style.opacity = 0;
+      level_Day1.switch();
+      player.position = {
+          x: Tiles(5),
+          y: Tiles(3)
+      }
+      player.teleport(Tiles(2), Tiles(-4))
+      for(let obj of Lists.floorObjs)
+          if(obj.level === this.level) {
+              obj.position.y -= Tiles(-4);
+              obj.position.x -= Tiles(2);
+          }
+      for(let obj of Lists.upperObjs)
+          if(obj.level === this.level) {
+              obj.position.y -= Tiles(-4);
+              obj.position.x -= Tiles(2);
+          }
+      for(let obj of Lists.bgObjs)
+          if(obj.level === this.level) {
+              obj.position.y -= Tiles(-4);
+              obj.position.x -= Tiles(2);
+          }
+      for(let obj of Lists.debugObjs)
+          if(obj.level === this.level) {
+              obj.position.y -= Tiles(-4);
+              obj.position.x -= Tiles(2);
+          }
+      Game.chat.setText("You went outside of your home.")
+      setTimeout(() =>  {
+          Game.state = "normal"
+      }, 900);
+  }, 900);
+}
+
+const bed = new Sprite({
+  name: "bed",
+  position: {
+      x: Game.bgOffset.x + Tiles(7),
+      y: Game.bgOffset.y + Tiles(6)
+  },
+  image: "bed",
+  folder: "home",
+  location: "floor",
+  interactable: true,
+  solid: true,
+  level: "home"
+});
+
+const dresser = new Sprite({
+  name: "dresser",
+  position: {
+      x: Game.bgOffset.x + Tiles(4),
+      y: Game.bgOffset.y + Tiles(6)
+  },
+  image: "dresser",
+  folder: "home",
+  location: "floor",
+  interactable: true,
+  solid: true,
+  level: "home"
+});
+

@@ -1,4 +1,4 @@
-const audio = {
+export const audio = {
     Map: new Howl({
         src: '../audio/main.mp3',
         html5: true,

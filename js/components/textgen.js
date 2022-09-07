@@ -1,5 +1,4 @@
-
-class TextFlow {
+export default class TextFlow {
     constructor(el) {
         this.el = el;
         this.update = this.update.bind(this);

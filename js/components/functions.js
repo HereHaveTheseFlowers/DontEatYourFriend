@@ -1,9 +1,12 @@
+import { Game, Tiles, Lists } from './globals.js';
+import Sprite from './sprite.js';
+
 
 function MakeShadow(shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor) {
-  c.shadowOffsetX = shadowOffsetX;
-  c.shadowOffsetY = shadowOffsetY;
-  c.shadowBlur = shadowBlur;
-  c.shadowColor = shadowColor;
+  Game.c.shadowOffsetX = shadowOffsetX;
+  Game.c.shadowOffsetY = shadowOffsetY;
+  Game.c.shadowBlur = shadowBlur;
+  Game.c.shadowColor = shadowColor;
 }
 
 function CreateImage(imagename, folder = false, custom_path = false) {
@@ -13,10 +16,10 @@ function CreateImage(imagename, folder = false, custom_path = false) {
   else {
     if(folder) {
       folder = folder + '/';
-      output.src = './img/' + folder + imagename + '-' + GLOB_exportRatio + '.png';
+      output.src = './img/' + folder + imagename + '-' + Game.exportRatio + '.png';
     }
     else
-      output.src = './img/' + imagename + '-' + GLOB_exportRatio + '.png';
+      output.src = './img/' + imagename + '-' + Game.exportRatio + '.png';
   }
   return output;
 }
@@ -35,54 +38,54 @@ function CollisionDetection (objOne, objTwo, dir = "none") {
   switch(dir) {
       case 'North':
         if(Game.debug) {
-          c.fillStyle = 'yellow'
-          c.globalAlpha = 0.01;
-          c.fillRect(objOne.position.x + 30, objOne.position.y + 60 - GLOB_movingSpeed, objOne.width - 60, objOne.height - 60  + GLOB_movingSpeed)
-          c.globalAlpha = 1;
+          Game.c.fillStyle = 'yellow'
+          Game.c.globalAlpha = 0.01;
+          Game.c.fillRect(objOne.position.x + 30, objOne.position.y + 60 - Game.movingSpeed, objOne.width - 60, objOne.height - 60  + Game.movingSpeed)
+          Game.c.globalAlpha = 1;
         }
         return  (objOne.position.x + 30 <= objTwo.position.x +  objTwo.width) && 
                 (objOne.position.x +  objOne.width - 30 >= objTwo.position.x) && 
-                (objOne.position.y + 60 - GLOB_movingSpeed <= objTwo.position.y +  objTwo.height) && 
+                (objOne.position.y + 60 - Game.movingSpeed <= objTwo.position.y +  objTwo.height) && 
                 (objOne.position.y + objOne.height >= objTwo.position.y);
       case 'East':
         if(Game.debug) {
-          c.fillStyle = 'yellow'
-          c.globalAlpha = 0.01;
-          c.fillRect(objOne.position.x + 30, objOne.position.y + 60, objOne.width - 60 + GLOB_movingSpeed, objOne.height - 60)
-          c.globalAlpha = 1;
+          Game.c.fillStyle = 'yellow'
+          Game.c.globalAlpha = 0.01;
+          Game.c.fillRect(objOne.position.x + 30, objOne.position.y + 60, objOne.width - 60 + Game.movingSpeed, objOne.height - 60)
+          Game.c.globalAlpha = 1;
         }
         return  (objOne.position.x + 30 <= objTwo.position.x +  objTwo.width) && 
-                (objOne.position.x +  objOne.width - 30 + GLOB_movingSpeed >= objTwo.position.x) && 
+                (objOne.position.x +  objOne.width - 30 + Game.movingSpeed >= objTwo.position.x) && 
                 (objOne.position.y + 60 <= objTwo.position.y +  objTwo.height) && 
                 (objOne.position.y +  objOne.height >= objTwo.position.y);
       case 'South':
         if(Game.debug) {
-          c.fillStyle = 'yellow'
-          c.globalAlpha = 0.01;
-          c.fillRect(objOne.position.x + 30, objOne.position.y + 60, objOne.width - 60, objOne.height - 60 + GLOB_movingSpeed)
-          c.globalAlpha = 1;
+          Game.c.fillStyle = 'yellow'
+          Game.c.globalAlpha = 0.01;
+          Game.c.fillRect(objOne.position.x + 30, objOne.position.y + 60, objOne.width - 60, objOne.height - 60 + Game.movingSpeed)
+          Game.c.globalAlpha = 1;
         }
         return  (objOne.position.x + 30 <= objTwo.position.x +  objTwo.width) && 
                 (objOne.position.x +  objOne.width - 30 >= objTwo.position.x) && 
                 (objOne.position.y + 60 <= objTwo.position.y +  objTwo.height) && 
-                (objOne.position.y +  objOne.height + GLOB_movingSpeed >= objTwo.position.y);
+                (objOne.position.y +  objOne.height + Game.movingSpeed >= objTwo.position.y);
       case 'West':
         if(Game.debug) {
-          c.fillStyle = 'yellow'
-          c.globalAlpha = 0.01;
-          c.fillRect(objOne.position.x + 30 - GLOB_movingSpeed, objOne.position.y + 60, objOne.width - 60 + GLOB_movingSpeed, objOne.height - 60)
-          c.globalAlpha = 1;
+          Game.c.fillStyle = 'yellow'
+          Game.c.globalAlpha = 0.01;
+          Game.c.fillRect(objOne.position.x + 30 - Game.movingSpeed, objOne.position.y + 60, objOne.width - 60 + Game.movingSpeed, objOne.height - 60)
+          Game.c.globalAlpha = 1;
         }
-        return  (objOne.position.x + 30 - GLOB_movingSpeed <= objTwo.position.x +  objTwo.width) && 
+        return  (objOne.position.x + 30 - Game.movingSpeed <= objTwo.position.x +  objTwo.width) && 
                 (objOne.position.x +  objOne.width - 30 >= objTwo.position.x) && 
                 (objOne.position.y + 60 <= objTwo.position.y +  objTwo.height) && 
                 (objOne.position.y +  objOne.height >= objTwo.position.y);
       default:
         if(Game.debug) {
-          c.fillStyle = 'red'
-          c.globalAlpha = 0.01;
-          c.fillRect(objOne.position.x, objOne.position.y, objOne.width, objOne.height)
-          c.globalAlpha = 1;
+          Game.c.fillStyle = 'red'
+          Game.c.globalAlpha = 0.01;
+          Game.c.fillRect(objOne.position.x, objOne.position.y, objOne.width, objOne.height)
+          Game.c.globalAlpha = 1;
         }
         return  (objOne.position.x < objTwo.position.x +  objTwo.width) && 
                 (objOne.position.x +  objOne.width > objTwo.position.x) && 
@@ -93,10 +96,10 @@ function CollisionDetection (objOne, objTwo, dir = "none") {
 
 function CollisionDetectionRange(objOne, objTwo, range) {
   if(Game.debug) {
-    c.fillStyle = 'blue'
-    c.globalAlpha = 0.1;
-    c.fillRect(objOne.position.x - range , objOne.position.y - range , objOne.width + range*2, objOne.height + range*2)
-    c.globalAlpha = 1;
+    Game.c.fillStyle = 'blue'
+    Game.c.globalAlpha = 0.1;
+    Game.c.fillRect(objOne.position.x - range , objOne.position.y - range , objOne.width + range*2, objOne.height + range*2)
+    Game.c.globalAlpha = 1;
   }
   return  (objOne.position.x - range < objTwo.position.x +  objTwo.width) && 
           (objOne.position.x +  objOne.width + range > objTwo.position.x) && 
@@ -109,90 +112,90 @@ function CollisionDetectionRange(objOne, objTwo, range) {
 function HandlePlayerMovement(dir) {
   let canmove = true;
   let bg = false;
-  for(let obj of bgObjs)
-    if(obj.level === player.level)
+  for(let obj of Lists.bgObjs)
+    if(obj.level === Game.player.level)
       bg = obj;
-  player.moving = true;
+  Game.player.moving = true;
   switch(dir) {
     case 'North':
-      player.image = player.sprites.up;
-      for(let obj of solidObjs)
-        if(obj.level === player.level && IsInView(obj) && CollisionDetection(player, obj, dir)) canmove = false;
+      Game.player.image = Game.player.sprites.up;
+      for(let obj of Lists.solidObjs)
+        if(obj.level === Game.player.level && IsInView(obj) && CollisionDetection(Game.player, obj, dir)) canmove = false;
       if(!canmove)
         break;
-      if(player.position.y <= bg.position.y + Tiles(3) || player.position.y > Tiles(3)) {
-        for(let obj of playerObjs)
-          obj.position.y -= GLOB_movingSpeed;
+      if(Game.player.position.y <= bg.position.y + Tiles(3) || Game.player.position.y > Tiles(3)) {
+        for(let obj of Lists.playerObjs)
+          obj.position.y -= Game.movingSpeed;
         break;
       }
-      for(let obj of floorObjs)
-        if(obj.level === player.level) obj.position.y += GLOB_movingSpeed;
-      for(let obj of upperObjs)
-        if(obj.level === player.level) obj.position.y += GLOB_movingSpeed;
-      for(let obj of bgObjs)
-        if(obj.level === player.level) obj.position.y += GLOB_movingSpeed;
-      for(let obj of debugObjs)
-        if(obj.level === player.level) obj.position.y += GLOB_movingSpeed;
+      for(let obj of Lists.floorObjs)
+        if(obj.level === Game.player.level) obj.position.y += Game.movingSpeed;
+      for(let obj of Lists.upperObjs)
+        if(obj.level === Game.player.level) obj.position.y += Game.movingSpeed;
+      for(let obj of Lists.bgObjs)
+        if(obj.level === Game.player.level) obj.position.y += Game.movingSpeed;
+      for(let obj of Lists.debugObjs)
+        if(obj.level === Game.player.level) obj.position.y += Game.movingSpeed;
       break;
     case 'East':
-      player.image = player.sprites.right;
-      for(let obj of solidObjs)
-        if(obj.level === player.level && IsInView(obj) && CollisionDetection(player, obj, dir)) canmove = false;
+      Game.player.image = Game.player.sprites.right;
+      for(let obj of Lists.solidObjs)
+        if(obj.level === Game.player.level && IsInView(obj) && CollisionDetection(Game.player, obj, dir)) canmove = false;
       if(!canmove)
         break;
-      if(player.position.x >= bg.width  + bg.position.x - Tiles(6) ||  player.position.x < Tiles(5)) {
-        for(let obj of playerObjs)
-          obj.position.x += GLOB_movingSpeed;
+      if(Game.player.position.x >= bg.width  + bg.position.x - Tiles(6) ||  Game.player.position.x < Tiles(5)) {
+        for(let obj of Lists.playerObjs)
+          obj.position.x += Game.movingSpeed;
         break;
       }
-      for(let obj of floorObjs)
-        if(obj.level === player.level) obj.position.x -= GLOB_movingSpeed;
-      for(let obj of upperObjs)
-        if(obj.level === player.level) obj.position.x -= GLOB_movingSpeed;
-      for(let obj of bgObjs)
-        if(obj.level === player.level) obj.position.x -= GLOB_movingSpeed;
-      for(let obj of debugObjs)
-        if(obj.level === player.level) obj.position.x -= GLOB_movingSpeed;
+      for(let obj of Lists.floorObjs)
+        if(obj.level === Game.player.level) obj.position.x -= Game.movingSpeed;
+      for(let obj of Lists.upperObjs)
+        if(obj.level === Game.player.level) obj.position.x -= Game.movingSpeed;
+      for(let obj of Lists.bgObjs)
+        if(obj.level === Game.player.level) obj.position.x -= Game.movingSpeed;
+      for(let obj of Lists.debugObjs)
+        if(obj.level === Game.player.level) obj.position.x -= Game.movingSpeed;
       break;
     case 'South':
-      player.image = player.sprites.down;
-      for(let obj of solidObjs)
-        if(obj.level === player.level && IsInView(obj) && CollisionDetection(player, obj, dir)) canmove = false;
+      Game.player.image = Game.player.sprites.down;
+      for(let obj of Lists.solidObjs)
+        if(obj.level === Game.player.level && IsInView(obj) && CollisionDetection(Game.player, obj, dir)) canmove = false;
       if(!canmove)
         break;
-      if(player.position.y >= bg.position.y + bg.height - Tiles(4) || player.position.y < Tiles(3)) {
-        for(let obj of playerObjs)
-          obj.position.y += GLOB_movingSpeed;
+      if(Game.player.position.y >= bg.position.y + bg.height - Tiles(4) || Game.player.position.y < Tiles(3)) {
+        for(let obj of Lists.playerObjs)
+          obj.position.y += Game.movingSpeed;
         break;
       }
-      for(let obj of floorObjs)
-        if(obj.level === player.level) obj.position.y -= GLOB_movingSpeed;
-      for(let obj of upperObjs)
-        if(obj.level === player.level) obj.position.y -= GLOB_movingSpeed;
-      for(let obj of bgObjs)
-        if(obj.level === player.level) obj.position.y -= GLOB_movingSpeed;
-      for(let obj of debugObjs)
-        if(obj.level === player.level) obj.position.y -= GLOB_movingSpeed;
+      for(let obj of Lists.floorObjs)
+        if(obj.level === Game.player.level) obj.position.y -= Game.movingSpeed;
+      for(let obj of Lists.upperObjs)
+        if(obj.level === Game.player.level) obj.position.y -= Game.movingSpeed;
+      for(let obj of Lists.bgObjs)
+        if(obj.level === Game.player.level) obj.position.y -= Game.movingSpeed;
+      for(let obj of Lists.debugObjs)
+        if(obj.level === Game.player.level) obj.position.y -= Game.movingSpeed;
       break;
     case 'West':
-      player.image = player.sprites.left;
-      for(let obj of solidObjs)
-        if(obj.level === player.level && IsInView(obj) && CollisionDetection(player, obj, dir)) canmove = false;
+      Game.player.image = Game.player.sprites.left;
+      for(let obj of Lists.solidObjs)
+        if(obj.level === Game.player.level && IsInView(obj) && CollisionDetection(Game.player, obj, dir)) canmove = false;
       if(!canmove)
         break;
-      if(player.position.x <= bg.position.x + Tiles(5) ||  player.position.x > Tiles(5)) {
-        for(let obj of playerObjs)
-          obj.position.x -= GLOB_movingSpeed;
+      if(Game.player.position.x <= bg.position.x + Tiles(5) ||  Game.player.position.x > Tiles(5)) {
+        for(let obj of Lists.playerObjs)
+          obj.position.x -= Game.movingSpeed;
         break;
       }
-      for(let obj of floorObjs)
-        if(obj.level === player.level) obj.position.x += GLOB_movingSpeed;
-      for(let obj of upperObjs)
-        if(obj.level === player.level) obj.position.x += GLOB_movingSpeed;
-      for(let obj of bgObjs)
-        if(obj.level === player.level) obj.position.x += GLOB_movingSpeed;
-      for(let obj of debugObjs)
-        if(obj.level === player.level) obj.position.x += GLOB_movingSpeed;
+      for(let obj of Lists.floorObjs)
+        if(obj.level === Game.player.level) obj.position.x += Game.movingSpeed;
+      for(let obj of Lists.upperObjs)
+        if(obj.level === Game.player.level) obj.position.x += Game.movingSpeed;
+      for(let obj of Lists.bgObjs)
+        if(obj.level === Game.player.level) obj.position.x += Game.movingSpeed;
+      for(let obj of Lists.debugObjs)
+        if(obj.level === Game.player.level) obj.position.x += Game.movingSpeed;
       break;
   }
 }
@@ -207,7 +210,7 @@ function PickRand(...array) {
   }
 }
 
-function PopulateAreaWith(areaX, areaY, areaWidth, areaHeight, items = {leafs: 0, rocks: 0, mushrooms: 0}, level = "") {
+function PopulateAreaWith(areaX, areaY, areaWidth, areaHeight, popwith = {leafs: 0, rocks: 0, mushrooms: 0}, level = "") {
   let locArray = [];
   for(let i = areaX; i < areaX + areaWidth;) {
     for(let j = areaY; j < areaY + areaHeight;) {
@@ -216,7 +219,7 @@ function PopulateAreaWith(areaX, areaY, areaWidth, areaHeight, items = {leafs: 0
     }
     i += Tiles(1);
   }
-  for(let i = 0; i < items.leafs; i++) {
+  for(let i = 0; i < popwith.leafs; i++) {
     //name
     const objNumber = PickRand(1, 2, 3);
     //location
@@ -229,21 +232,21 @@ function PopulateAreaWith(areaX, areaY, areaWidth, areaHeight, items = {leafs: 0
     const newObj = new Sprite({
       name: "leaf",
       position: {
-        x: GLOB_bgOffset.x + loc[0],
-        y: GLOB_bgOffset.y + loc[1]
+        x: Game.bgOffset.x + loc[0],
+        y: Game.bgOffset.y + loc[1]
       },
       image: 'leaf' + objNumber,
       location: "floor",
       item: true,
       sprites: {
-        default: this.image,
+        default: 'leaf' + objNumber,
         droplet: imageDroplet
       },
       folder: 'leafs',
       level: level
     });
   }
-  for(let i = 0; i < items.rocks; i++) {
+  for(let i = 0; i < popwith.rocks; i++) {
     //name
     const objType = PickRand('Small', 'Medium', 'Large');
     const objNumber = PickRand(1, 2)
@@ -290,8 +293,8 @@ function PopulateAreaWith(areaX, areaY, areaWidth, areaHeight, items = {leafs: 0
     const newObj = new Sprite({
       name: "rocks",
       position: {
-          x: GLOB_bgOffset.x + loc[0],
-          y: GLOB_bgOffset.y + loc[1]
+          x: Game.bgOffset.x + loc[0],
+          y: Game.bgOffset.y + loc[1]
       },
       image: 'rocks' + objType + objNumber,
       location: "floor",
@@ -301,7 +304,7 @@ function PopulateAreaWith(areaX, areaY, areaWidth, areaHeight, items = {leafs: 0
       level: level
     });
   }
-  for(let i = 0; i < items.mushrooms; i++) {
+  for(let i = 0; i < popwith.mushrooms; i++) {
     //name
     const objType = PickRand('Small', 'Medium', 'Large');
     const objColor = PickRand('Red', 'Brown');
@@ -319,8 +322,8 @@ function PopulateAreaWith(areaX, areaY, areaWidth, areaHeight, items = {leafs: 0
     const newObj = new Sprite({
       name: "mushroom",
       position: {
-          x: GLOB_bgOffset.x + loc[0],
-          y: GLOB_bgOffset.y + loc[1]
+          x: Game.bgOffset.x + loc[0],
+          y: Game.bgOffset.y + loc[1]
       },
       image: 'mushroom' + objColor + objType + objNumber,
       location: "floor",
@@ -376,3 +379,4 @@ function CreateBorders(array, obj) {
   }
 }
 
+export { MakeShadow, CreateImage, CollisionDetection, CollisionDetectionRange, HandlePlayerMovement, PickRand, PopulateAreaWith, IsInView, CreateBorders };
