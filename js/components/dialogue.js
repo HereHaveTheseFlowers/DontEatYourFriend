@@ -9,7 +9,8 @@ export default class Dialogue {
         Game.state = "dialogue";
         Game.active_dialogue = this;
         this.current_sentence = 0;
-        this.next_line();
+        document.getElementById("enter").style.display = "block"
+        this.next_line()
     }
     next_line() {
         if(this.current_sentence >= this.lines.length) {
@@ -23,5 +24,6 @@ export default class Dialogue {
     end() {
         Game.state = "normal";
         Game.active_dialogue = false;
+        document.getElementById("enter").style.display = "none"
     }
 }

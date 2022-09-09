@@ -1,19 +1,9 @@
 
-////////////////////////
-//// TREE HOME      ////
-////////////////////////
-
-const level_Home = new Level({
-    name: "home",
-    active: true
-});
-
-
 const background_home = new Sprite({
     name: "background_home",
     position: {
-        x: GLOB_bgOffset.x,
-        y: GLOB_bgOffset.y
+        x: Game.bgOffset.x,
+        y: Game.bgOffset.y
     },
     image: "bg",
     folder: "home",

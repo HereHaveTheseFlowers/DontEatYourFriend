@@ -1,5 +1,5 @@
 
-import { Game, Tiles, Lists, Timers } from './globals.js';
+import { Game, Tiles, Lists, Timers, Pixels } from './globals.js';
 import { MakeShadow, CollisionDetection, CollisionDetectionRange, IsInView } from './functions.js';
 import { keys } from './keys.js';
 
@@ -65,6 +65,14 @@ export class Level {
         Game.c.restore();
         for(let obj of Lists.upperObjs)
             if(obj.level === level) obj.draw();
+        /// DIALOGUE ICON
+        if(Game.state === "dialogue") {
+            Game.iconDialogue.position = {
+                x: Game.player.position.x + Pixels(14),
+                y: Game.player.position.y - Pixels(4)
+            }
+            Game.iconDialogue.draw();
+        }
         /// INTERACT W/ OBJECTS
         for(let obj of Lists.interactableObjs) {
             if(Game.state !== "normal") return;

@@ -1,5 +1,4 @@
 import TextFlow from './components/textgen.js';
-import { audio } from './components/audio.js';
 import { Game, Tiles, Lists, Timers } from './components/globals.js';
 Game.tileSize = 16 * (Game.exportRatio / 100)
 Game.bgOffset = { x:  - Tiles(1), y: - Tiles(4) }
@@ -14,7 +13,6 @@ import Sprite from './components/sprite.js';
 import { Level, levels, level_Day1, level_Home } from './components/level.js';
 import Dialogue from './components/dialogue.js';
 import { MakeShadow, CreateImage, CollisionDetection, CollisionDetectionRange, HandlePlayerMovement, PickRand, PopulateAreaWith, IsInView, CreateBorders } from './components/functions.js';
-import { performanceChecker, animate } from './components/animate.js';
 
 prepareKeys();
 prepareGameStart();
@@ -118,6 +116,16 @@ const iconPickup= new Sprite({
   animationFrameRate: 50,
   image: imageIconPickup
 });
+
+const iconDialogue= new Sprite({
+  name: "iconDialogue",
+  position: {
+    x: Tiles(5),
+    y: Tiles(2)
+  },
+  image: "dialoguecloud"
+});
+Game.iconDialogue = iconDialogue;
 Game.iconInteract = iconInteract;
 Game.iconPickup = iconPickup;
 

@@ -1,11 +1,4 @@
 
-const level_Day1 = new Level({
-    name: "day1",
-    active: false
-});
-
-const levels = [level_Home, level_Day1];
-
 const treeHome = new Sprite({
     name: "treeHome",
     position: {

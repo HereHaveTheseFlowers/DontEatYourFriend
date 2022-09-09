@@ -2,7 +2,9 @@
 export function Tiles(numberOfTiles) {
     return numberOfTiles * Game.tileSize
 }
-
+export function Pixels(numberOfPixels) {
+  return numberOfPixels * 6
+}
 export const Game = {
     mainCanvas: document.querySelector('canvas'),
     transitionDiv: document.getElementById('transition'),
@@ -25,7 +27,8 @@ export const Game = {
     player: false,
     inventoryObj: false,
     iconPickup: false,
-    iconInteract: false
+    iconInteract: false,
+    iconDialogue: false
 };
 
 export const Lists = {
@@ -67,5 +70,5 @@ export const Timers = {
     movementDelayTimer: new Timer(Game.playerMovementSpeed), // 2
     performanceCheckTimer: new Timer(60),
     dialogueProceedTimer: new Timer(100),
-    pickupTimer: new Timer(30)
+    pickupTimer: new Timer(60)
 }
