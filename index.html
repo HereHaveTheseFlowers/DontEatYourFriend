@@ -35,12 +35,16 @@
     </div>
     
     <div id="transition"></div>
-    <div class="flex-container">
-        <canvas class="flex-item"></canvas>
-    </div>
-    <div id="content" class="text"></div>
+    <main class="screen">
+        <div class="flex-container">
+            <canvas class="flex-item"></canvas>
+        </div>
+        <div class="footer">
+            <div id="content" class="text"></div>
+            <button id="enter" draggable="false">Press "Enter"</button>
+        </div>
+    </main>
 
-    <img alt="press enter to continue" src="../img/enter-600.png" id="enter" draggable="false">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="./js/index.js" type="module"></script> 

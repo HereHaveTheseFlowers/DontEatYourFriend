@@ -1,4 +1,4 @@
-import { Game, Tiles, Lists } from './globals.js';
+import { Game, Tiles, Lists, Timer } from './globals.js';
 import { CreateImage, IsInView } from './functions.js';
 
 
@@ -57,7 +57,7 @@ export default class Sprite {
         }
 		if(this.upperImage) {
 			const upperImageNew = CreateImage(this.upperImage, this.folder);
-			new Sprite({
+			const newSprite = new Sprite({
 				name: this.name + "_upper",
 				position: {
 					x: this.position.x,
@@ -170,5 +170,47 @@ export default class Sprite {
                 obj.position.y -= offsety;
                 obj.position.x -= offsetx;
             }
+    }
+    shake(offset = 10, milliseconds = 500) {
+        let currentOffset = 0;
+        let currentDir = 'right';
+        const initialPosition = {
+            x: this.position.x,
+            y: this.position.y
+        }
+        let shakeEnd = false;
+        const that = this;
+        const shakeTimer = new Timer(milliseconds*0.05);
+        const shakeFunc = () => {
+            if(currentDir === 'right') {
+                currentOffset += 4;
+                that.position =  {
+                    x: initialPosition.x + currentOffset,
+                    y: initialPosition.y
+                };
+                if(currentOffset > offset) {
+                    currentDir = 'left';
+                    offset -= 1;
+                }
+            } else {
+                currentOffset -= 4;
+                that.position =  {
+                    x: initialPosition.x + currentOffset,
+                    y: initialPosition.y
+                };
+                if(currentOffset < offset * -1) {
+                    currentDir = 'right';
+                    offset -= 1;
+                }
+            }
+            if(shakeTimer.check()) { 
+                shakeEnd = true;
+            }
+            if(shakeEnd && currentOffset === 0) {
+                clearInterval(shakeInterval);
+                that.position = initialPosition;
+            }
+        }
+        const shakeInterval = setInterval(shakeFunc, 20);
     }
 }

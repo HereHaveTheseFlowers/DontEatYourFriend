@@ -43,7 +43,7 @@ export const Lists = {
     itemsObjs: []
 }
 
-class Timer {
+export class Timer {
     constructor(limit = 0) {
       this.limit = limit;
       this.val = 0;
@@ -65,6 +65,7 @@ class Timer {
       this.val = 0;
     }
 }
+
 export const Timers = {
     canvasDrawDelayTimer: new Timer(Game.speed), // 1
     movementDelayTimer: new Timer(Game.playerMovementSpeed), // 2

@@ -14,6 +14,8 @@ import { Level, levels, level_Day1, level_Home } from './components/level.js';
 import Dialogue from './components/dialogue.js';
 import { MakeShadow, CreateImage, CollisionDetection, CollisionDetectionRange, HandlePlayerMovement, PickRand, PopulateAreaWith, IsInView, CreateBorders } from './components/functions.js';
 
+import store from './utils/Store.js';
+
 prepareKeys();
 prepareGameStart();
 
@@ -64,8 +66,8 @@ const player = new Sprite({
   level: "home",
   animationFrameRate: 7,
 });
-Game.player = player
-
+Game.player = player;
+store.set("player", player)
 
 player.pickup = function(obj) {
   if(!obj.item)
@@ -119,6 +121,8 @@ const iconPickup= new Sprite({
 
 const iconDialogue= new Sprite({
   name: "iconDialogue",
+  frames: { max: 3 },
+  animationFrameRate: 25,
   position: {
     x: Tiles(5),
     y: Tiles(2)

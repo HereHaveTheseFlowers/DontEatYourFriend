@@ -1,4 +1,5 @@
 import { Game } from './globals.js';
+import store from '../utils/Store.js';
 
 export default class Dialogue {
     constructor({lines}) {
@@ -18,8 +19,11 @@ export default class Dialogue {
             Game.chat.setText('');
             return;
         }
-        Game.chat.setText(this.lines[this.current_sentence]);
-        this.current_sentence = this.current_sentence + 1;
+        if(this.lines[this.current_sentence].author !== "none") {
+            store.getState()[this.lines[this.current_sentence].author].shake();
+        }
+        Game.chat.setText(this.lines[this.current_sentence].text);
+        this.current_sentence++;
     }
     end() {
         Game.state = "normal";
@@ -27,3 +31,8 @@ export default class Dialogue {
         document.getElementById("enter").style.display = "none"
     }
 }
+
+export const dialogueGameIntro = [
+    { author: "player", text: "I am a mouse!" },
+    { author: "player", text: "hehe" }
+];
