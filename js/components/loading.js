@@ -27,12 +27,12 @@ export function GameStart () {
     Game.transitionDiv.style.opacity = 1;
     setTimeout(() =>  {
         Game.transitionDiv.style.opacity = 0;
-        Game.menuDiv.style.display = 'none'
-        Game.mainCanvas.style.display = 'block'
+        Game.menuDiv.style.display = 'none';
+        Game.mainCanvas.style.display = 'block';
         animate();
         setTimeout(() =>  {
             audio.Map.play();
-            Game.state = "normal"
+            Game.state = "normal";
             const dialogue_intro = new Dialogue({ lines: dialogueGameIntro });
             dialogue_intro.start();
         }, 900);

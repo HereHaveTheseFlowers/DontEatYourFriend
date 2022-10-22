@@ -9,7 +9,7 @@ Game.c = Game.mainCanvas.getContext('2d');
 Game.chat = new TextFlow(document.querySelector('.text'));
 import { prepareGameStart, GameStart } from './components/loading.js';
 import { keys, prepareKeys } from './components/keys.js';
-import Sprite from './components/sprite.js';
+import Sprite, { LivingSprite } from './components/sprite.js';
 import { Level, levels, level_Day1, level_Home } from './components/level.js';
 import Dialogue from './components/dialogue.js';
 import { MakeShadow, CreateImage, CollisionDetection, CollisionDetectionRange, HandlePlayerMovement, PickRand, PopulateAreaWith, IsInView, CreateBorders } from './components/functions.js';
@@ -46,8 +46,8 @@ const playerDownImage = CreateImage('playerDown', 'player');
 const playerUpImage = CreateImage('playerUp', 'player');
 const playerLeftImage = CreateImage('playerLeft', 'player');
 const playerRightImage = CreateImage('playerRight', 'player');
-const player = new Sprite({
-  name: "player",
+const player = new LivingSprite({
+  name: "Mouse George",
   position: {
     x: Tiles(5),
     y: Tiles(3)
@@ -66,6 +66,11 @@ const player = new Sprite({
   level: "home",
   animationFrameRate: 7,
 });
+for(const level of levels) {
+  if(level.active) {
+    player.level = level.name;
+  }
+}
 Game.player = player;
 store.set("player", player)
 
@@ -94,7 +99,7 @@ player.pickup = function(obj) {
 player.interact = function(obj) {
   if(!obj || !CollisionDetectionRange(player, obj, Game.interactionRange))
     return false;
-  obj.interact(player)
+  obj._interact(player)
 }
 
 const iconInteract = new Sprite({
@@ -249,7 +254,7 @@ const pool = new Sprite({
 
 pool.interact = function(obj) {
   if(!Game.inventoryObj)
-    Game.chat.setText('You can fill something with water.');
+    player.speak('Not thursty. But I can fill something with water!');
   else if(Game.inventoryObj.name === "leaf") {
       Game.chat.setText('You fill the leaf with a droplet of water.');
       Game.inventoryObj.image = Game.inventoryObj.sprites.droplet;
@@ -258,7 +263,7 @@ pool.interact = function(obj) {
   else if(Game.inventoryObj.name === "leaf with a droplet of water")
     Game.chat.setText('You already have a droplet on your leaf!');
   else
-    Game.chat.setText('You cant fill that with water.');
+    player.speak('I cant fill that with water :|');
 }
 
 
@@ -465,9 +470,14 @@ const bed = new Sprite({
   folder: "home",
   location: "floor",
   interactable: true,
+  interactCooldown: 500,
   solid: true,
   level: "home"
 });
+
+bed.interact = function() {
+  player.speak('I dont really want to sleep right now...');
+}
 
 const dresser = new Sprite({
   name: "dresser",

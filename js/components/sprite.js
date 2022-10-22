@@ -3,7 +3,7 @@ import { CreateImage, IsInView } from './functions.js';
 
 
 export default class Sprite {
-    constructor({name, position, image, frames = { max: 1 }, sprites, location = "none", solid = false, interactable = false, item = false, size = 1, animationFrameRate = 20, upperImage = false, folder = false, level, upperImageOffset = Tiles(1)}) {
+    constructor({name, position, image, frames = { max: 1 }, sprites, location = "none", solid = false, interactable = false, item = false, size = 1, animationFrameRate = 20, upperImage = false, folder = false, level, upperImageOffset = Tiles(1), interactCooldown = 300}) {
         this.spriteID = Math.floor(Math.random() * (100000 - 1) + 1);
         this.name = name;
         this.position = position;
@@ -70,6 +70,8 @@ export default class Sprite {
 			});
 		}
         this.size = size;
+        this.interactCooldown = interactCooldown;
+        this.lastInteractDate = new Date().getTime();
     }
     draw() {
         if(!IsInView(this))
@@ -95,11 +97,13 @@ export default class Sprite {
             else this.frames.val = 0
         }
     }
-    pickup = function () {
-        console.log('cant pickup that');
-        return false;
+    _interact() {
+        if(new Date().getTime() - this.lastInteractDate > this.interactCooldown) {
+            this.lastInteractDate = new Date().getTime();
+            this.interact();
+        }
     }
-    interact= function () {
+    interact = function () {
         console.log('cant interact with that');
         return false;
     }
@@ -171,7 +175,7 @@ export default class Sprite {
                 obj.position.x -= offsetx;
             }
     }
-    shake(offset = 10, milliseconds = 500) {
+    shake(offset = 5, milliseconds = 360) {
         let currentOffset = 0;
         let currentDir = 'right';
         const initialPosition = {
@@ -180,7 +184,8 @@ export default class Sprite {
         }
         let shakeEnd = false;
         const that = this;
-        const shakeTimer = new Timer(milliseconds*0.05);
+        const intervalVal = 26;
+        const shakeTimer = new Timer(milliseconds/intervalVal);
         const shakeFunc = () => {
             if(currentDir === 'right') {
                 currentOffset += 4;
@@ -190,7 +195,7 @@ export default class Sprite {
                 };
                 if(currentOffset > offset) {
                     currentDir = 'left';
-                    offset -= 1;
+                    // offset -= 1;
                 }
             } else {
                 currentOffset -= 4;
@@ -200,7 +205,7 @@ export default class Sprite {
                 };
                 if(currentOffset < offset * -1) {
                     currentDir = 'right';
-                    offset -= 1;
+                    // offset -= 1;
                 }
             }
             if(shakeTimer.check()) { 
@@ -211,6 +216,25 @@ export default class Sprite {
                 that.position = initialPosition;
             }
         }
-        const shakeInterval = setInterval(shakeFunc, 20);
+        const shakeInterval = setInterval(shakeFunc, intervalVal);
+    }
+}
+
+export class LivingSprite extends Sprite {
+    constructor(obj) {
+        super(obj)
+    }
+    speak(text, shake = true) {
+        Game.chat.setText(`${this.name}: \"${text}\"`);
+        if(shake) this.shake();
+        if(this.spriteID === store.getState().player.spriteID) {
+            Game.dialogueCloud = true;
+            setTimeout(function() {
+                Game.dialogueCloud = false;
+            }, 1000)
+        }
+    }
+    pickup = function () {
+        return false;
     }
 }

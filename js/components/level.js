@@ -66,7 +66,7 @@ export class Level {
         for(let obj of Lists.upperObjs)
             if(obj.level === level) obj.draw();
         /// DIALOGUE ICON
-        if(Game.state === "dialogue") {
+        if(Game.dialogueCloud === true) {
             Game.iconDialogue.position = {
                 x: Game.player.position.x + Pixels(14),
                 y: Game.player.position.y - Pixels(4)
@@ -116,11 +116,11 @@ export class Level {
 export const level_Day1 = new Level({
     name: "day1",
     active: false
-  });
+});
   
 export const level_Home = new Level({
     name: "home",
     active: true
-  });
+});
   
 export const levels = [level_Home, level_Day1];

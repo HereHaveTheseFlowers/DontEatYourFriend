@@ -10,8 +10,8 @@ export default class Dialogue {
         Game.state = "dialogue";
         Game.active_dialogue = this;
         this.current_sentence = 0;
-        document.getElementById("enter").style.display = "block"
-        this.next_line()
+        document.getElementById("enter").style.display = "block";
+        this.next_line();
     }
     next_line() {
         if(this.current_sentence >= this.lines.length) {
@@ -20,9 +20,11 @@ export default class Dialogue {
             return;
         }
         if(this.lines[this.current_sentence].author !== "none") {
-            store.getState()[this.lines[this.current_sentence].author].shake();
+            const speaker = store.getState()[this.lines[this.current_sentence].author];
+            speaker.speak(this.lines[this.current_sentence].text);
+        } else {
+            Game.chat.setText(this.lines[this.current_sentence].text);
         }
-        Game.chat.setText(this.lines[this.current_sentence].text);
         this.current_sentence++;
     }
     end() {

@@ -16,6 +16,7 @@ export const Game = {
     chat: false,
     state: "transition",
     debug: false,
+    dialogueCloud: false,
     speed: 1,
     playerMovementSpeed: 2,
     active_dialogue: false,
